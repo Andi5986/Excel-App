@@ -6,6 +6,10 @@ def remove_nulls(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         df = df[df[column].notnull() & df[column].astype(str).str[0].str.isdigit()]
     return df
 
+def remove_na_accounts(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.dropna(subset=['Account'])
+    return df
+
 def remove_empty_columns(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(how='all', axis=1)
     return df
@@ -52,14 +56,12 @@ def rename_columns_je(df):
 def process_journal(df: pd.DataFrame) -> pd.DataFrame:
     df = rename_columns_je(df)
 
-    transactions_dr = df.groupby('Account Debit').agg({'Amount': 'sum'}).reset_index().rename(columns={'Amount': 'Debit Amount'})
-    transactions_cr = df.groupby('Account Credit').agg({'Amount': 'sum'}).reset_index().rename(columns={'Amount': 'Credit Amount'})
+    transactions_dr = df.groupby('Account Debit').agg({'Amount': 'sum'}).reset_index().rename(columns={'Amount': 'Debit Amount', 'Account Debit': 'Account'})
+    transactions_cr = df.groupby('Account Credit').agg({'Amount': 'sum'}).reset_index().rename(columns={'Amount': 'Credit Amount', 'Account Credit': 'Account'})
 
-    df_out = pd.merge(transactions_dr, transactions_cr, left_on='Account Debit', right_on='Account Credit', how='outer')
+    df_out = pd.merge(transactions_dr, transactions_cr, on='Account', how='outer')
 
     df_out.fillna(0, inplace=True)
-
-    df_out = df_out.rename(columns={'Account Debit': 'Account'}).drop('Account Credit', axis=1)
     
     return df_out
 

@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from data_processing import process_dataframe, process_journal
+from data_processing import process_dataframe, process_journal, remove_na_accounts
 from utils import get_table_download_link, to_excel
 from io import BytesIO
 from llm_agent import set_openai_key, init_agent, get_agent_response
@@ -27,7 +27,6 @@ if uploaded_file1 is not None:
     df1 = load_excel_data(uploaded_file1)
     # Process the DataFrame
     df1 = process_dataframe(df1)
-    excel_data = to_excel(df1)
 
     # AI Agent Section
     if openai_api_key:
@@ -37,18 +36,33 @@ if uploaded_file2 is not None:
     df2 = load_excel_data(uploaded_file2)
     df2 = process_journal(df2)
 
-    # Comparing transactions
-    df1 = df1.merge(df2, on='Account', suffixes=('_TB', '_JE'))
+if uploaded_file1 is not None and uploaded_file2 is not None:
+    # Merge df1 (trial balance) with df2 (journal entries) 
+    df1 = pd.merge(df1, df2, on='Account', how='outer')
+
+    # Remove rows with 'Account' as NA
+    df1 = remove_na_accounts(df1)
+
+    # Define the columns we want to fill NaN values with 0
+    fillna_columns = ['Opening Balance Debit', 'Opening Balance Credit', 
+                      'Current Transactions Debit', 'Current Transactions Credit', 
+                      'Closing Balance Debit', 'Closing Balance Credit', 
+                      'Debit Amount', 'Credit Amount' ]
+
+    # Replace NaN values with 0 in the defined columns
+    df1[fillna_columns] = df1[fillna_columns].fillna(0)
 
     # Compute the differences
     df1['Diff Dr.'] = df1['Current Transactions Debit'] - df1['Debit Amount']
     df1['Diff Cr.'] = df1['Current Transactions Credit'] - df1['Credit Amount']
 
+    excel_data = to_excel(df1)  # Move this line to here
+
 # Uploaded Documents Section
 if view_option == 'Uploaded Documents':
     if uploaded_file1 is not None:
         st.write(df1)
-        st.markdown(get_table_download_link(excel_data, 'processed_data.xlsx'), unsafe_allow_html=True)
+#       st.markdown(get_table_download_link(excel_data, 'processed_data.xlsx'), unsafe_allow_html=True)
 
     if uploaded_file2 is not None:
         # Save the dataframes to an Excel file
