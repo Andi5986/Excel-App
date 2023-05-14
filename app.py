@@ -41,7 +41,7 @@ if view_option == 'Uploaded Documents':
         df1 = process_dataframe(df1)
 
         excel_data = to_excel(df1)
-        st.sidebar.markdown(get_table_download_link(excel_data, 'processed_data.xlsx'), unsafe_allow_html=True)
+        #st.sidebar.markdown(get_table_download_link(excel_data, 'processed_data.xlsx'), unsafe_allow_html=True)
 
         uploaded_file2 = st.sidebar.file_uploader('Upload your journal entry Excel file', type=['xlsx'])
         if uploaded_file2 is not None:
