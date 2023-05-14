@@ -1,0 +1,5 @@
+# Ignore temp.csv file
+temp.csv
+
+# Ignore __pycache__ directory
+__pycache__/
