@@ -2,19 +2,13 @@ import base64
 import pandas as pd
 from io import BytesIO
 import os
-import pandas as pd
 
-def get_table_download_link(df: pd.DataFrame, filename: str = 'data.xlsx') -> str:
+def get_table_download_link(excel_data: bytes, filename: str = 'data.xlsx') -> str:
     """Generates a link allowing the data in a given pandas dataframe to be downloaded
     in:  dataframe
     out: href string
     """
-    output = BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, sheet_name='Sheet1')
-    writer.save()
-    xlsx_data = output.getvalue()
-    b64 = base64.b64encode(xlsx_data).decode()  # some strings <-> bytes conversions necessary here
+    b64 = base64.b64encode(excel_data).decode()  # some strings <-> bytes conversions necessary here
     href = f'<a href="data:application/octet-stream;base64,{b64}" download={filename}>Download Excel File</a>'
     return href
 
@@ -37,7 +31,7 @@ def convert_and_save_as_csv(uploaded_file) -> str:
 
 def to_excel(df):
     output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, sheet_name='Sheet1', index=False)
     return output.getvalue()
 

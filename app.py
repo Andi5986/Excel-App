@@ -40,7 +40,8 @@ if view_option == 'Uploaded Documents':
         # Process the DataFrame
         df1 = process_dataframe(df1)
 
-        st.sidebar.markdown(get_table_download_link(df1, 'processed_data.xlsx'), unsafe_allow_html=True)
+        excel_data = to_excel(df1)
+        st.sidebar.markdown(get_table_download_link(excel_data, 'processed_data.xlsx'), unsafe_allow_html=True)
 
         uploaded_file2 = st.sidebar.file_uploader('Upload your journal entry Excel file', type=['xlsx'])
         if uploaded_file2 is not None:
@@ -51,20 +52,24 @@ if view_option == 'Uploaded Documents':
                 # Comparing transactions
                 df1 = df1.merge(df2, on='Account', suffixes=('_TB', '_JE'))
 
+                # Compute the differences
+                df1['Diff Dr.'] = df1['Current Transactions Debit'] - df1['Debit Amount']
+                df1['Diff Cr.'] = df1['Current Transactions Credit'] - df1['Credit Amount']
+
             except ValueError as e:
                 st.error(f"Error processing journal entry: {e}")
 
         # Write the dataframe to the app
         st.write(df1)
 
-        # Save the dataframe to an Excel file
-        #output = BytesIO()
-        #with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        #    df1.to_excel(writer, sheet_name='Trial Balance', index=False)
-        #    if 'df2' in locals():
-        #        df2.to_excel(writer, sheet_name='Journal Entry', index=False)
+        # Save the dataframes to an Excel file
+        if uploaded_file2 is not None:
+            excel_data_combined = BytesIO()
+            with pd.ExcelWriter(excel_data_combined, engine='xlsxwriter') as writer:
+                df1.to_excel(writer, sheet_name='Trial Balance', index=False)
+                df2.to_excel(writer, sheet_name='Journal Entry', index=False)
 
-        #st.markdown(get_table_download_link(output.getvalue(), filename='combined.xlsx'), unsafe_allow_html=True)
+            st.markdown(get_table_download_link(excel_data_combined.getvalue(), filename='combined.xlsx'), unsafe_allow_html=True)
 
 elif view_option == 'Findings':
     # Logic for findings should be implemented here
