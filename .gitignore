@@ -13,4 +13,4 @@ Experiments/
 
 .pytest_cache
 
-.fast-closing-app
+backup/
