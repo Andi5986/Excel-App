@@ -15,4 +15,4 @@ def init_agent(api_key, model_name='gpt-3.5-turbo', temperature=0.0):
 def get_agent_response(ai_agent, df, user_input):
     agent = create_pandas_dataframe_agent(ai_agent, df, verbose=True)
     response = agent.run(user_input)
-    return response
+    return response, df
