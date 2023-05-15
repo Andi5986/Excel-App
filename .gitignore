@@ -10,3 +10,7 @@ Experiments/
 .ipynb_checkpoints
 
 .venv
+
+.pytest_cache
+
+.fast-closing-app
