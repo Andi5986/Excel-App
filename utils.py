@@ -2,6 +2,7 @@ import base64
 import pandas as pd
 from io import BytesIO
 import os
+import streamlit as st
 
 def get_table_download_link(excel_data: bytes, filename: str = 'data.xlsx') -> str:
     """Generates a link allowing the data in a given pandas dataframe to be downloaded
@@ -28,6 +29,11 @@ def convert_and_save_as_csv(uploaded_file) -> str:
     else:
         print("No file uploaded.")
         return None
+
+@st.cache_data
+def load_excel_data(uploaded_file):
+    df = pd.read_excel(uploaded_file)
+    return df
 
 def to_excel(df):
     output = BytesIO()

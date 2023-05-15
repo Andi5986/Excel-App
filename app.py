@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from data_processing import process_dataframe, process_journal, remove_na_accounts
-from utils import get_table_download_link, to_excel
+from utils import get_table_download_link, to_excel, load_excel_data
 from io import BytesIO
 from llm_agent import set_openai_key, init_agent, get_agent_response
 
@@ -14,11 +14,6 @@ if openai_api_key:
 
 # Creating a button to toggle between uploaded documents and findings
 view_option = st.selectbox('Choose View', ['Uploaded Documents', 'Findings'])
-
-@st.cache_data
-def load_excel_data(uploaded_file):
-    df = pd.read_excel(uploaded_file)
-    return df
 
 uploaded_file1 = st.sidebar.file_uploader('Upload your trial balance Excel file', type=['xlsx'])
 uploaded_file2 = st.sidebar.file_uploader('Upload your journal entry Excel file', type=['xlsx'])
@@ -84,7 +79,7 @@ elif view_option == 'Findings':
         if user_input:
             response = get_agent_response(agent, df1, user_input)  # pass df1 as an argument
             st.write(response)
-
+            
     if uploaded_file2 is not None:
         # Save the dataframes to an Excel file
         excel_data_combined = BytesIO()

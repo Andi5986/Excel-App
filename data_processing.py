@@ -42,7 +42,6 @@ def process_dataframe(df: pd.DataFrame, *args) -> pd.DataFrame:
     df = convert_to_float(df, ['Account', 'Description'])
     return df
 
-
 def rename_columns_je(df):
     column_mapping = {
         'Cont debitor': 'Account Debit',
