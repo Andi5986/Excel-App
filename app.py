@@ -24,7 +24,7 @@ uploaded_file1 = st.sidebar.file_uploader(':blue[**Upload your trial balance Exc
 uploaded_file2 = st.sidebar.file_uploader(':blue[**Upload your journal entry Excel file**]', type=['xlsx'])
 
 # Select the books that are uploaded
-view_option = st.sidebar.selectbox(':blue[**Select the other accounting books**]', ['Fixed Assets Register', 'Stock Sheets', 'Debtors breakdown', 'Vendors breakdown'])
+accounting_book_option = st.sidebar.selectbox(':blue[**Select the other accounting books**]', ['Fixed Assets Register', 'Stock Sheets', 'Debtors breakdown', 'Vendors breakdown'])
 uploaded_file3 = st.sidebar.file_uploader(':blue[_Upload Excel File_]' ,type=['xlsx'])
 
 if uploaded_file1 is not None:
