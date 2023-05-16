@@ -93,7 +93,7 @@ elif view_option == 'Findings':
     if uploaded_file1 is not None:
         show_dataframe = st.sidebar.checkbox('Show combined TB & JE', key='show_combined_TB_JE_findings')
         if show_dataframe:
-            st.write(df1)
+            st.write(df1 = st.experimental_data_editor(df1,num_rows= 'dynamic' ))
     
     if uploaded_file3 is not None:
         df3 = load_excel_data(uploaded_file3)
@@ -101,7 +101,7 @@ elif view_option == 'Findings':
         # Create a checkbox to toggle the display of 'Other Books'
         show_other_books_findings = st.sidebar.checkbox('Show other books', key='show_other_books_findings')
         if show_other_books_findings and uploaded_file3 is not None:
-            st.write(df3)
+            st.write(df3 = st.experimental_data_editor(df3,num_rows= 'dynamic' ))
 
     # AI Agent Section
     if openai_api_key and uploaded_file1 is not None:
