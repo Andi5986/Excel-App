@@ -8,10 +8,10 @@ from llm_agent import set_openai_key, init_agent, get_agent_response
 st.set_page_config(page_title="Accounting Fast Close", page_icon="📖", layout="wide")
 st.sidebar.header(":blue[_Configure_]")
 
-st.title('📖:blue[Accounting Fast Close]')
+st.title('📖  :blue[**Accounting Fast Close**]  📖')
 
 # Ask user for OpenAI API key
-openai_api_key = st.sidebar.text_input('Enter your OpenAI API Key', type='password')
+openai_api_key = st.sidebar.text_input(':blue[_Enter your OpenAI API Key_]', type='password')
 if openai_api_key:
     set_openai_key(openai_api_key)
 
@@ -20,9 +20,12 @@ view_option = st.selectbox('Choose View', ['Uploaded Documents', 'Findings'])
 
 # Place the file upload widgets in the columns
 
-uploaded_file1 = st.sidebar.file_uploader('Upload your trial balance Excel file', type=['xlsx'])
-uploaded_file2 = st.sidebar.file_uploader('Upload your journal entry Excel file', type=['xlsx'])
-uploaded_file3 = st.sidebar.file_uploader('Upload your other book Excel file', type=['xlsx'])
+uploaded_file1 = st.sidebar.file_uploader(':blue[**Upload your trial balance Excel file**]', type=['xlsx'])
+uploaded_file2 = st.sidebar.file_uploader(':blue[**Upload your journal entry Excel file**]', type=['xlsx'])
+
+# Select the books that are uploaded
+view_option = st.sidebar.selectbox(':blue[**Select the other accounting books**]', ['Fixed Assets Register', 'Stock Sheets', 'Debtors breakdown', 'Vendors breakdown'])
+uploaded_file3 = st.sidebar.file_uploader(':blue[_Upload Excel File_]' ,type=['xlsx'])
 
 if uploaded_file1 is not None:
     df1 = load_excel_data(uploaded_file1)
